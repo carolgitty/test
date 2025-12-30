@@ -1,95 +1,218 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Color Grid Options</title>
+<title>Memory Card Game</title>
 
 <style>
   body {
     margin: 0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: #f4f6fb;
     font-family: Arial, sans-serif;
+    background: #121212;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
   }
 
-  .controls {
-    margin-bottom: 20px;
+  .container {
+    text-align: center;
+  }
+
+  .top-bar {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+  }
+
+  select, button {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
   }
 
   button {
-    margin: 0 6px;
-    padding: 8px 14px;
-    font-size: 14px;
-    border: none;
-    border-radius: 8px;
-    background: #2563eb;
-    color: #fff;
-    cursor: pointer;
+    background: #ff9800;
+    color: #000;
+    font-weight: bold;
   }
 
-  .grid {
+  .stats {
+    margin-bottom: 10px;
+  }
+
+  .game-board {
     display: grid;
-    gap: 14px;
+    gap: 12px;
+    justify-content: center;
+    perspective: 1000px;
   }
 
-  .tile {
-    width: 80px;
-    height: 80px;
-    background: #000;
-    border-radius: 12px;
+  .card {
+    width: 90px;
+    height: 90px;
+    position: relative;
     cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+  }
+
+  .card.flipped {
+    transform: rotateY(180deg);
+  }
+
+  .card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 38px;
+    border-radius: 10px;
+    backface-visibility: hidden;
+  }
+
+  .front {
+    background: #1f1f1f;
+  }
+
+  .back {
+    background: #4caf50;
+    transform: rotateY(180deg);
+  }
+
+  @media (max-width: 500px) {
+    .card {
+      width: 70px;
+      height: 70px;
+    }
   }
 </style>
 </head>
 
 <body>
 
-<div class="controls">
-  <button onclick="createGrid(2)">2 × 2</button>
-  <button onclick="createGrid(3)">3 × 3</button>
-  <button onclick="createGrid(4)">4 × 4</button>
+<div class="container">
+  <h2>🧠 Memory Game</h2>
+
+  <div class="top-bar">
+    <select id="difficulty">
+      <option value="4">Easy (4×4)</option>
+      <option value="6">Hard (6×6)</option>
+    </select>
+    <button onclick="startGame()">🔄 Restart</button>
+  </div>
+
+  <div class="stats">
+    ⏱ Time: <span id="time">0</span>s |
+    🧮 Moves: <span id="moves">0</span>
+  </div>
+
+  <div class="game-board" id="board"></div>
 </div>
 
-<div class="grid" id="grid"></div>
-
 <script>
-  const COLORS = [
-    '#ff6b6b', '#4d96ff', '#6bcb77', '#ffd93d',
-    '#f472b6', '#34d399', '#818cf8', '#fb923c',
-    '#22d3ee', '#c084fc', '#facc15', '#60a5fa',
-    '#fb7185', '#4ade80', '#a78bfa', '#f97316'
+  const allSymbols = [
+    '🍎','🍌','🍇','🍒','🍉','🥝','🍍','🍓',
+    '🥑','🍑','🍋','🍊','🍐','🥥','🍈','🍏',
+    '🐶','🐱'
   ];
 
-  const grid = document.getElementById('grid');
+  let firstCard, secondCard, lock;
+  let moves = 0, matched = 0;
+  let timer = 0, interval;
 
-  function createGrid(size) {
-    grid.innerHTML = '';
-    grid.style.gridTemplateColumns = `repeat(${size}, 80px)`;
+  function startGame() {
+    clearInterval(interval);
+    timer = 0;
+    moves = 0;
+    matched = 0;
+    firstCard = secondCard = null;
+    lock = false;
 
-    const total = size * size;
+    document.getElementById('time').textContent = 0;
+    document.getElementById('moves').textContent = 0;
 
-    for (let i = 0; i < total; i++) {
-      const tile = document.createElement('div');
-      tile.className = 'tile';
-      tile.dataset.color = COLORS[i % COLORS.length];
+    interval = setInterval(() => {
+      timer++;
+      document.getElementById('time').textContent = timer;
+    }, 1000);
 
-      tile.onclick = () => {
-        tile.style.background = tile.dataset.color;
-        setTimeout(() => {
-          tile.style.background = '#000';
-        }, 300);
-      };
+    const size = Number(document.getElementById('difficulty').value);
+    const pairs = (size * size) / 2;
+    const symbols = allSymbols.slice(0, pairs);
+    const cards = [...symbols, ...symbols].sort(() => Math.random() - 0.5);
 
-      grid.appendChild(tile);
+    const board = document.getElementById('board');
+    board.innerHTML = '';
+    board.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+
+    cards.forEach(symbol => {
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      card.innerHTML = `
+        <div class="card-face front">❓</div>
+        <div class="card-face back">${symbol}</div>
+      `;
+
+      card.addEventListener('click', () => flip(card));
+      board.appendChild(card);
+    });
+  }
+
+  function flip(card) {
+    if (lock || card === firstCard || card.classList.contains('matched')) return;
+
+    card.classList.add('flipped');
+
+    if (!firstCard) {
+      firstCard = card;
+      return;
+    }
+
+    secondCard = card;
+    moves++;
+    document.getElementById('moves').textContent = moves;
+
+    const match =
+      firstCard.querySelector('.back').textContent ===
+      secondCard.querySelector('.back').textContent;
+
+    lock = true;
+
+    if (match) {
+      firstCard.classList.add('matched');
+      secondCard.classList.add('matched');
+      matched += 2;
+      resetTurn();
+
+      if (matched === document.querySelectorAll('.card').length) {
+        clearInterval(interval);
+        setTimeout(() =>
+          alert(`🎉 You won in ${moves} moves and ${timer} seconds!`), 400
+        );
+      }
+    } else {
+      setTimeout(() => {
+        firstCard.classList.remove('flipped');
+        secondCard.classList.remove('flipped');
+        resetTurn();
+      }, 900);
     }
   }
 
-  // Default grid
-  createGrid(2);
+  function resetTurn() {
+    firstCard = secondCard = null;
+    lock = false;
+  }
+
+  startGame();
 </script>
 
 </body>
