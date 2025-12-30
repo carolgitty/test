@@ -87,7 +87,7 @@
   <h1>🧠 Brain Teaser</h1>
 
   <div class="turn" id="turn"></div>
-  <div class="timer">⏱ Time left: <span id="time">15</span>s</div>
+  <div class="timer">⏱ Time left: <span id="time">15000</span>s</div>
 
   <div class="question" id="question"></div>
 
@@ -128,12 +128,12 @@
   let team = "A";
   let scoreA = 0, scoreB = 0;
   let answered = false;
-  let time = 15;
+  let time = 15000;
   let timer;
 
   function startTimer() {
     clearInterval(timer);
-    time = 15;
+    time = 150000;
     document.getElementById("time").innerText = time;
 
     timer = setInterval(() => {
@@ -227,4 +227,5 @@
 
 </body>
 </html>
+
 
