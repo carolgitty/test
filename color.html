@@ -194,6 +194,7 @@
   }
 
   function nextQuestion() {
+    checkAnswer();
     clearInterval(timer);
     index++;
     team = team === "A" ? "B" : "A";
@@ -227,5 +228,6 @@
 
 </body>
 </html>
+
 
 
