@@ -161,6 +161,8 @@
   function updateTurn() {
     document.getElementById("turn").innerText =
       team === "A" ? "🔵 Team A's Turn" : "🟢 Team B's Turn";
+    document.getElementById("turn").style.backgroundColor = 
+      team === "A" ? "red" : "green";
   }
 
   function checkAnswer() {
@@ -225,3 +227,4 @@
 
 </body>
 </html>
+
