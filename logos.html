@@ -153,6 +153,7 @@
   }
 
   function nextLogo() {
+    checkAnswer();
     index++;
     if (index >= logos.length) {
       alert("🎉 Game Over! Your score: " + score);
