@@ -96,32 +96,78 @@
 </div>
 
 <script>
-  const logos = [
-    {
-      img: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
-      name: "amazon"
-    },
-    {
-      img: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
-      name: "google"
-    },
-    {
-      img: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
-      name: "apple"
-    },
-    {
-      img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg",
-      name: "netflix"
-    },
-    {
-      img: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg",
-      name: "microsoft"
-    },
-    {
-      img: "https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg",
-      name: "youtube"
-    }
-  ];
+const logos = [
+  { img: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg", name: "amazon" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg", name: "google" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg", name: "apple" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg", name: "netflix" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg", name: "microsoft" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg", name: "youtube" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg", name: "facebook" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/a/ab/Instagram_logo_2016.svg", name: "instagram" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/6/6f/Logo_of_Twitter.svg", name: "twitter" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/8/81/LinkedIn_icon.svg", name: "linkedin" },
+
+  { img: "https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg", name: "samsung" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Nike_logo.svg", name: "nike" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg", name: "adidas" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/4/4f/Puma_logo.svg", name: "puma" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/5/5f/Reebok_2019_logo.svg", name: "reebok" },
+
+  { img: "https://upload.wikimedia.org/wikipedia/commons/1/17/Pepsi_logo.svg", name: "pepsi" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Coca-Cola_logo.svg", name: "coca cola" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/0/09/McDonald%27s_Golden_Arches.svg", name: "mcdonalds" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/4/45/KFC_logo.svg", name: "kfc" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Starbucks_Coffee_Logo.svg", name: "starbucks" },
+
+  { img: "https://upload.wikimedia.org/wikipedia/commons/7/75/BMW_logo_%282020%29.svg", name: "bmw" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/9/9d/Mercedes-Benz_Logo_2010.svg", name: "mercedes" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/4/44/Audi_logo.svg", name: "audi" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/6/6e/Toyota_Logo.svg", name: "toyota" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/9/9e/Honda-logo.svg", name: "honda" },
+
+  { img: "https://upload.wikimedia.org/wikipedia/commons/1/16/PayPal_logo.svg", name: "paypal" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg", name: "visa" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.svg", name: "mastercard" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/4/40/Stripe_logo.svg", name: "stripe" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/b/b5/UPI-Logo-vector.svg", name: "upi" },
+
+  { img: "https://upload.wikimedia.org/wikipedia/commons/8/84/Spotify_icon.svg", name: "spotify" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/1/19/Disney%2B_logo.svg", name: "disney plus" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Prime_Video_logo.svg", name: "prime video" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/7/70/Hotstar_logo.svg", name: "hotstar" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/d/db/Sony_logo.svg", name: "sony" },
+
+  { img: "https://upload.wikimedia.org/wikipedia/commons/8/85/Flipkart_logo.svg", name: "flipkart" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/2/24/Myntra_logo.svg", name: "myntra" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/1/13/Ajio-Logo.svg", name: "ajio" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/2/2a/Swiggy_logo.svg", name: "swiggy" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/7/75/Zomato_logo.svg", name: "zomato" },
+
+  { img: "https://upload.wikimedia.org/wikipedia/commons/6/69/HP_logo_2012.svg", name: "hp" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Dell_Logo.svg", name: "dell" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/0/00/Lenovo_logo.svg", name: "lenovo" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/4/4a/AsusTek_black_logo.svg", name: "asus" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/7/7d/Acer_2011.svg", name: "acer" },
+
+  { img: "https://upload.wikimedia.org/wikipedia/commons/0/02/WhatsApp_Logo.svg", name: "whatsapp" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/8/8e/Telegram_logo.svg", name: "telegram" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/4/4e/Snapchat_logo.svg", name: "snapchat" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/5/51/TikTok_logo.svg", name: "tiktok" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Pinterest-logo.png", name: "pinterest" },
+
+  { img: "https://upload.wikimedia.org/wikipedia/commons/3/35/Reddit_logo.svg", name: "reddit" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/2/2d/Dropbox_logo.svg", name: "dropbox" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/4/4a/Slack_Icon_2019.svg", name: "slack" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/3/32/Zoom_Communications_Logo.svg", name: "zoom" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/5/59/Skype_logo.svg", name: "skype" },
+
+  { img: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Intel_logo.svg", name: "intel" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg", name: "amd" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/a/a4/Nvidia_logo.svg", name: "nvidia" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/4/4d/Oracle_logo.svg", name: "oracle" },
+  { img: "https://upload.wikimedia.org/wikipedia/commons/0/01/IBM_logo.svg", name: "ibm" }
+];
 
   let index = 0;
   let score = 0;
