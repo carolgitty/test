@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Guess the Logo</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #e0f7fa, #fffde7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+
+  .game {
+    background: white;
+    width: 400px;
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  }
+
+  h1 {
+    margin-top: 0;
+  }
+
+  img {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    margin: 15px 0;
+  }
+
+  input {
+    width: 90%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+
+  button {
+    margin: 10px 5px;
+    padding: 10px 18px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: white;
+    background: #4caf50;
+  }
+
+  button:hover {
+    background: #43a047;
+  }
+
+  .next {
+    background: #2196f3;
+  }
+
+  .next:hover {
+    background: #1e88e5;
+  }
+
+  .result {
+    font-weight: bold;
+    margin-top: 10px;
+  }
+
+  .score {
+    margin-top: 10px;
+    font-size: 16px;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="game">
+  <h1>🧩 Guess the Logo</h1>
+
+  <img id="logo" src="" alt="Logo">
+
+  <input type="text" id="answer" placeholder="Enter brand name">
+
+  <br>
+  <button onclick="checkAnswer()">Check</button>
+  <button class="next" onclick="nextLogo()">Next</button>
+
+  <div class="result" id="result"></div>
+  <div class="score">Points: <span id="score">0</span></div>
+</div>
+
+<script>
+  const logos = [
+    {
+      img: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
+      name: "amazon"
+    },
+    {
+      img: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
+      name: "google"
+    },
+    {
+      img: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
+      name: "apple"
+    },
+    {
+      img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg",
+      name: "netflix"
+    },
+    {
+      img: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg",
+      name: "microsoft"
+    },
+    {
+      img: "https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg",
+      name: "youtube"
+    }
+  ];
+
+  let index = 0;
+  let score = 0;
+  let answered = false;
+
+  function loadLogo() {
+    document.getElementById("logo").src = logos[index].img;
+    document.getElementById("answer").value = "";
+    document.getElementById("result").innerText = "";
+    answered = false;
+  }
+
+  function checkAnswer() {
+    if (answered) return;
+
+    const userAnswer = document.getElementById("answer").value.toLowerCase().trim();
+    const correct = logos[index].name;
+
+    if (userAnswer === correct) {
+      document.getElementById("result").innerText = "✅ Correct!";
+      document.getElementById("result").style.color = "green";
+      score++;
+      document.getElementById("score").innerText = score;
+      answered = true;
+    } else {
+      document.getElementById("result").innerText = "❌ Try again!";
+      document.getElementById("result").style.color = "red";
+    }
+  }
+
+  function nextLogo() {
+    index++;
+    if (index >= logos.length) {
+      alert("🎉 Game Over! Your score: " + score);
+      index = 0;
+      score = 0;
+      document.getElementById("score").innerText = 0;
+    }
+    loadLogo();
+  }
+
+  loadLogo();
+</script>
+
+</body>
+</html>
