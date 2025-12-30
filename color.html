@@ -2,217 +2,225 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Memory Card Game</title>
+<title>Brain Teaser – 2 Groups</title>
 
 <style>
   body {
-    margin: 0;
     font-family: Arial, sans-serif;
-    background: #121212;
-    color: #fff;
+    background: linear-gradient(135deg, #dff1ff, #fff7d6);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    margin: 0;
   }
 
-  .container {
+  .game {
+    background: white;
+    width: 480px;
+    padding: 25px;
+    border-radius: 15px;
     text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
   }
 
-  .top-bar {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    margin-bottom: 15px;
-    flex-wrap: wrap;
-  }
+  h1 { margin-top: 0; }
 
-  select, button {
-    padding: 8px 12px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-  }
-
-  button {
-    background: #ff9800;
-    color: #000;
+  .turn {
     font-weight: bold;
-  }
-
-  .stats {
+    font-size: 18px;
     margin-bottom: 10px;
   }
 
-  .game-board {
-    display: grid;
-    gap: 12px;
-    justify-content: center;
-    perspective: 1000px;
+  .timer {
+    font-size: 16px;
+    color: #e53935;
+    margin-bottom: 10px;
   }
 
-  .card {
-    width: 90px;
-    height: 90px;
-    position: relative;
+  .question {
+    font-size: 18px;
+    margin: 15px 0;
+  }
+
+  input {
+    width: 90%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
+  button {
+    margin: 10px 5px;
+    padding: 10px 18px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
     cursor: pointer;
-    transform-style: preserve-3d;
-    transition: transform 0.6s;
+    color: white;
   }
 
-  .card.flipped {
-    transform: rotateY(180deg);
+  .check { background: #4caf50; }
+  .next { background: #2196f3; }
+
+  .check:hover { background: #43a047; }
+  .next:hover { background: #1e88e5; }
+
+  .result {
+    font-weight: bold;
+    margin-top: 10px;
   }
 
-  .card-face {
-    position: absolute;
-    width: 100%;
-    height: 100%;
+  .scoreboard {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 38px;
-    border-radius: 10px;
-    backface-visibility: hidden;
-  }
-
-  .front {
-    background: #1f1f1f;
-  }
-
-  .back {
-    background: #4caf50;
-    transform: rotateY(180deg);
-  }
-
-  @media (max-width: 500px) {
-    .card {
-      width: 70px;
-      height: 70px;
-    }
+    justify-content: space-around;
+    margin-top: 15px;
+    font-size: 16px;
   }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-  <h2>🧠 Memory Game</h2>
+<div class="game">
+  <h1>🧠 Brain Teaser</h1>
 
-  <div class="top-bar">
-    <select id="difficulty">
-      <option value="4">Easy (4×4)</option>
-      <option value="6">Hard (6×6)</option>
-    </select>
-    <button onclick="startGame()">🔄 Restart</button>
+  <div class="turn" id="turn"></div>
+  <div class="timer">⏱ Time left: <span id="time">15</span>s</div>
+
+  <div class="question" id="question"></div>
+
+  <input type="text" id="answer" placeholder="Type answer">
+
+  <br>
+  <button class="check" onclick="checkAnswer()">Check</button>
+  <button class="next" onclick="nextQuestion()">Next</button>
+
+  <div class="result" id="result"></div>
+
+  <div class="scoreboard">
+    <div>Team A: <span id="scoreA">0</span></div>
+    <div>Team B: <span id="scoreB">0</span></div>
   </div>
-
-  <div class="stats">
-    ⏱ Time: <span id="time">0</span>s |
-    🧮 Moves: <span id="moves">0</span>
-  </div>
-
-  <div class="game-board" id="board"></div>
 </div>
 
+<!-- Sounds -->
+<audio id="correctSound" src="https://www.soundjay.com/buttons/sounds/button-4.mp3"></audio>
+<audio id="wrongSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
+<audio id="buzzerSound" src="https://www.soundjay.com/misc/sounds/fail-buzzer-02.mp3"></audio>
+
 <script>
-  const allSymbols = [
-    '🍎','🍌','🍇','🍒','🍉','🥝','🍍','🍓',
-    '🥑','🍑','🍋','🍊','🍐','🥥','🍈','🍏',
-    '🐶','🐱'
+  const questions = [
+    { q: "What has hands but can’t clap?", a: "clock" },
+    { q: "What goes up but never comes down?", a: "age" },
+    { q: "What has to be broken before you can use it?", a: "egg" },
+    { q: "I’m tall when young and short when old. What am I?", a: "candle" },
+    { q: "What has a neck but no head?", a: "bottle" },
+    { q: "What gets wetter the more it dries?", a: "towel" },
+    { q: "What has many keys but can’t open a door?", a: "piano" },
+    { q: "What has legs but doesn’t walk?", a: "table" },
+    { q: "What can you catch but not throw?", a: "cold" },
+    { q: "What gets bigger the more you take away?", a: "hole" }
   ];
 
-  let firstCard, secondCard, lock;
-  let moves = 0, matched = 0;
-  let timer = 0, interval;
+  let index = 0;
+  let team = "A";
+  let scoreA = 0, scoreB = 0;
+  let answered = false;
+  let time = 15;
+  let timer;
 
-  function startGame() {
-    clearInterval(interval);
-    timer = 0;
-    moves = 0;
-    matched = 0;
-    firstCard = secondCard = null;
-    lock = false;
+  function startTimer() {
+    clearInterval(timer);
+    time = 15;
+    document.getElementById("time").innerText = time;
 
-    document.getElementById('time').textContent = 0;
-    document.getElementById('moves').textContent = 0;
+    timer = setInterval(() => {
+      time--;
+      document.getElementById("time").innerText = time;
 
-    interval = setInterval(() => {
-      timer++;
-      document.getElementById('time').textContent = timer;
-    }, 1000);
-
-    const size = Number(document.getElementById('difficulty').value);
-    const pairs = (size * size) / 2;
-    const symbols = allSymbols.slice(0, pairs);
-    const cards = [...symbols, ...symbols].sort(() => Math.random() - 0.5);
-
-    const board = document.getElementById('board');
-    board.innerHTML = '';
-    board.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
-
-    cards.forEach(symbol => {
-      const card = document.createElement('div');
-      card.className = 'card';
-
-      card.innerHTML = `
-        <div class="card-face front">❓</div>
-        <div class="card-face back">${symbol}</div>
-      `;
-
-      card.addEventListener('click', () => flip(card));
-      board.appendChild(card);
-    });
-  }
-
-  function flip(card) {
-    if (lock || card === firstCard || card.classList.contains('matched')) return;
-
-    card.classList.add('flipped');
-
-    if (!firstCard) {
-      firstCard = card;
-      return;
-    }
-
-    secondCard = card;
-    moves++;
-    document.getElementById('moves').textContent = moves;
-
-    const match =
-      firstCard.querySelector('.back').textContent ===
-      secondCard.querySelector('.back').textContent;
-
-    lock = true;
-
-    if (match) {
-      firstCard.classList.add('matched');
-      secondCard.classList.add('matched');
-      matched += 2;
-      resetTurn();
-
-      if (matched === document.querySelectorAll('.card').length) {
-        clearInterval(interval);
-        setTimeout(() =>
-          alert(`🎉 You won in ${moves} moves and ${timer} seconds!`), 400
-        );
+      if (time === 0) {
+        clearInterval(timer);
+        document.getElementById("buzzerSound").play();
+        document.getElementById("result").innerText = "⏰ Time's up!";
+        document.getElementById("result").style.color = "red";
+        answered = true;
       }
+    }, 1000);
+  }
+
+  function loadQuestion() {
+    document.getElementById("question").innerText = questions[index].q;
+    document.getElementById("answer").value = "";
+    document.getElementById("result").innerText = "";
+    answered = false;
+    startTimer();
+  }
+
+  function updateTurn() {
+    document.getElementById("turn").innerText =
+      team === "A" ? "🔵 Team A's Turn" : "🟢 Team B's Turn";
+  }
+
+  function checkAnswer() {
+    if (answered) return;
+
+    const userAnswer = document.getElementById("answer").value.toLowerCase().trim();
+    const correct = questions[index].a;
+
+    if (userAnswer === correct) {
+      document.getElementById("correctSound").play();
+      document.getElementById("result").innerText = "✅ Correct!";
+      document.getElementById("result").style.color = "green";
+
+      if (team === "A") {
+        scoreA++;
+        document.getElementById("scoreA").innerText = scoreA;
+      } else {
+        scoreB++;
+        document.getElementById("scoreB").innerText = scoreB;
+      }
+
+      clearInterval(timer);
+      answered = true;
     } else {
-      setTimeout(() => {
-        firstCard.classList.remove('flipped');
-        secondCard.classList.remove('flipped');
-        resetTurn();
-      }, 900);
+      document.getElementById("wrongSound").play();
+      document.getElementById("result").innerText = "❌ Wrong!";
+      document.getElementById("result").style.color = "red";
     }
   }
 
-  function resetTurn() {
-    firstCard = secondCard = null;
-    lock = false;
+  function nextQuestion() {
+    clearInterval(timer);
+    index++;
+    team = team === "A" ? "B" : "A";
+
+    if (index >= questions.length) {
+      let winner =
+        scoreA > scoreB ? "🏆 Team A Wins!" :
+        scoreB > scoreA ? "🏆 Team B Wins!" :
+        "🤝 It's a Tie!";
+
+      alert(
+        "🎉 Game Over!\n\n" +
+        "Team A: " + scoreA + "\n" +
+        "Team B: " + scoreB + "\n\n" +
+        winner
+      );
+
+      index = 0;
+      scoreA = scoreB = 0;
+      document.getElementById("scoreA").innerText = 0;
+      document.getElementById("scoreB").innerText = 0;
+    }
+
+    updateTurn();
+    loadQuestion();
   }
 
-  startGame();
+  updateTurn();
+  loadQuestion();
 </script>
 
 </body>
